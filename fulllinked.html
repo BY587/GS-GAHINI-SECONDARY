@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G.S GAHINI | Official Portal</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; background: #f4f4f4; scroll-behavior: smooth; }
+        header { background: #1a4a1a; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        nav a { color: white; margin-left: 15px; text-decoration: none; font-weight: bold; cursor: pointer; }
+        
+        .hero { text-align: center; padding: 50px; background: white; border-bottom: 3px solid #f4b400; }
+        
+        /* Main Container for all forms */
+        .portal-box { max-width: 450px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0px 4px 15px rgba(0,0,0,0.1); display: none; }
+        .portal-box.active { display: block; animation: fadeIn 0.4s; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Login Specific Styles */
+        .tab-box { display: flex; border-bottom: 2px solid #ddd; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: none; cursor: pointer; font-weight: bold; color: #666; }
+        .tab-btn.active { color: #1a4a1a; border-bottom: 3px solid #1a4a1a; }
+        
+        .login-sub-form { display: none; }
+        .login-sub-form.active { display: block; }
+        
+        label { font-weight: bold; display: block; margin-top: 15px; font-size: 0.9rem; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        
+        .submit-btn { width: 100%; background: #1a4a1a; color: white; border: none; padding: 14px; cursor: pointer; border-radius: 4px; font-size: 1rem; font-weight: bold; margin-top: 10px; }
+        .submit-btn:hover { background: #113311; }
+
+        .form-footer { margin-top: 20px; display: flex; justify-content: space-between; font-size: 0.85rem; border-top: 1px solid #eee; padding-top: 15px; }
+        .form-footer a { color: #1a4a1a; text-decoration: none; font-weight: bold; cursor: pointer; }
+        
+        footer { text-align: center; padding: 30px; font-size: 0.8rem; color: #666; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>G.S GAHINI</div>
+        <nav>
+            <a onclick="showSection('home-hero')">Home</a>
+            <a onclick="showSection('main-login')">Portal Login</a>
+        </nav>
+    </header>
+
+    <!-- Home Hero Section -->
+    <section id="home-hero" class="hero">
+        <h1>Groupe Scolaire Gahini</h1>
+        <p>Knowledge, Discipline, and Excellence in Kayonza District.</p>
+        <button class="submit-btn" style="width: auto; padding: 10px 30px;" onclick="showSection('main-login')">Access Portal</button>
+    </section>
+
+    <!-- SECTION 1: LOGIN (Combined Student/Staff) -->
+    <section id="main-login" class="portal-box active">
+        <div class="tab-box">
+            <button class="tab-btn active" id="tab-student" onclick="switchLoginRole('student')">Student</button>
+            <button class="tab-btn" id="tab-staff" onclick="switchLoginRole('staff')">Staff</button>
+        </div>
+
+        <!-- Student Login View -->
+        <div id="student-view" class="login-sub-form active">
+            <form action="/student-auth" method="POST">
+                <label>Student Reg Number</label>
+                <input type="text" placeholder="GAH/2024/XXX" required>
+                <label>Password</label>
+                <input type="password" placeholder="••••••••" required>
+                <button type="submit" class="submit-btn">Login to Dashboard</button>
+            </form>
+        </div>
+
+        <!-- Staff Login View -->
+        <div id="staff-view" class="login-sub-form">
+            <form action="/staff-auth" method="POST">
+                <label>Staff Email</label>
+                <input type="email" placeholder="name@gahini.rw" required>
+                <label>Security Pin</label>
+                <input type="password" placeholder="••••••••" required>
+                <button type="submit" class="submit-btn" style="background: #2c3e50;">Staff Authentication</button>
+            </form>
+        </div>
+
+        <div class="form-footer">
+            <a onclick="showSection('reset-box')">Forgot Password?</a>
+            <a onclick="showSection('register-box')">Create Account</a>
+        </div>
+    </section>
+
+    <!-- SECTION 2: REGISTER ACCOUNT -->
+    <section id="register-box" class="portal-box">
+        <h2 style="text-align: center; color: #1a4a1a;">Create Account</h2>
+        <form action="/register" method="POST">
+            <label>Full Name</label>
+            <input type="text" placeholder="Enter Full Name" required>
+            <label>School Email / ID</label>
+            <input type="email" placeholder="example@gsgahini.rw" required>
+            <label>Account Type</label>
+            <select required>
+                <option value="student">Student</option>
+                <option value="staff">Staff/Teacher</option>
+            </select>
+            <label>Create Password</label>
+            <input type="password" placeholder="Min. 8 characters" minlength="8" required>
+            <button type="submit" class="submit-btn">Register Account</button>
+        </form>
+        <div class="form-footer" style="justify-content: center;">
+            <a onclick="showSection('main-login')">Already have an account? Login</a>
+        </div>
+    </section>
+
+    <!-- SECTION 3: FORGOT PASSWORD -->
+    <section id="reset-box" class="portal-box">
+        <h2 style="text-align: center; color: #1a4a1a;">Reset Password</h2>
+        <p style="font-size: 13px; color: #666; text-align: center;">Enter your school email to receive a reset link.</p>
+        <form action="/reset-request" method="POST">
+            <label>Registration Email</label>
+            <input type="email" placeholder="Enter your email" required>
+            <button type="submit" class="submit-btn" style="background: #d4af37; color: #1a4a1a;">Send Reset Link</button>
+        </form>
+        <div class="form-footer" style="justify-content: center;">
+            <a onclick="showSection('main-login')">Back to Login</a>
+        </div>
+    </section>
+
+    <footer>&copy; 2024 G.S GAHINI - Eastern Province, Rwanda.</footer>
+
+    <script>
+        // Function to switch between Login, Register, and Reset screens
+        function showSection(sectionId) {
+            // Hide all portal boxes
+            document.querySelectorAll('.portal-box').forEach(box => box.classList.remove('active'));
+            // Show the selected one
+            const target = document.getElementById(sectionId);
+            if(target) target.classList.add('active');
+            
+            // Toggle Hero visibility
+            const hero = document.getElementById('home-hero');
+            if(sectionId === 'home-hero') hero.style.display = 'block';
+            else hero.style.display = 'none';
+        }
+
+        // Function to switch between Student and Staff tabs inside Login
+        function switchLoginRole(role) {
+            document.getElementById('student-view').classList.remove('active');
+            document.getElementById('staff-view').classList.remove('active');
+            document.getElementById('tab-student').classList.remove('active');
+            document.getElementById('tab-staff').classList.remove('active');
+
+            if(role === 'student') {
+                document.getElementById('student-view').classList.add('active');
+                document.getElementById('tab-student').classList.add('active');
+            } else {
+                document.getElementById('staff-view').classList.add('active');
+                document.getElementById('tab-staff').classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
